@@ -24,34 +24,18 @@ editar todos os campos.
       Requisito 1.4: Como funcionário, Junior quer ter a possibilidade de excluir um equipamento que esteja registrado. 
  
          •  A lista de equipamentos deve ser atualizada */
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            Funcionario junior = new Funcionario("Junior", 1000.0, 123456, "01-01-2024", "Empresa XYZ");
-            Equipamento pa = new Equipamento(001, "pá", 30.00, "Fabricante", "15-04-2024");
-        }
-    }
     public class Funcionario
     {
         public string nome;
-        public double precoAquisicao;
-        public int NSerie;
-        public string dataFabricacao;
-        public string fabricante;
 
-        private List<Equipamento> equipamentos = new List<Equipamento>();
+        private static List<Equipamento> equipamentos = new List<Equipamento>();
 
-        public Funcionario(string nome, double precoAquisicao, int nSerie, string dataFabricacao, string fabricante)
+        public Funcionario(string nome)
         {
             this.nome = nome;
-            this.precoAquisicao = precoAquisicao;
-            NSerie = nSerie;
-            this.dataFabricacao = dataFabricacao;
-            this.fabricante = fabricante;
         }
 
-        public Equipamento RegistrarEquipamento(int numero, string nome, double preco, string fabricante, string dataFabricacao)
+        public Equipamento RegistrarEquipamento(int numero, string nome, double preco, string fabricante, DateTime dataFabricacao)
         {
             Equipamento equipamento = new Equipamento(numero, nome, preco, fabricante, dataFabricacao);
             equipamentos.Add(equipamento);
@@ -71,7 +55,7 @@ editar todos os campos.
                 Console.WriteLine();
             }
         }
-        public bool ExcluirEquipamento(int numero, string nome, double preco, string fabricante, string dataFabricacao)
+        public bool ExcluirEquipamento(int numero, string nome, double preco, string fabricante, DateTime dataFabricacao)
         {
             Equipamento equipamento = new Equipamento(numero, nome, preco, fabricante, dataFabricacao);
 
@@ -86,23 +70,61 @@ editar todos os campos.
                 return false; 
             }
         }
-
-    }
-    public class Equipamento
-    {
-        public int numero;
-        public string nome;
-        public double preco;
-        public string fabricante;
-        public string dataFabricacao;
-
-        public Equipamento(int numero, string nome, double preco, string fabricante, string dataFabricacao)
+        public void EditarEquipamento(int numero, string nome, double preco, string fabricante, DateTime dataFabricacao)
         {
-            this.numero = numero;
-            this.nome = nome;
-            this.preco = preco;
-            this.fabricante = fabricante;
-            this.dataFabricacao = dataFabricacao;
+            Equipamento equipamento = ObterEquipamentoPorNumero(numero);
+
+            if (equipamento == null)
+            {
+                Console.WriteLine("Equipamento não encontrado");
+            }
+            else
+            {
+                equipamento.nome = nome;
+                equipamento.preco = preco;
+                equipamento.fabricante = fabricante;
+                equipamento.dataFabricacao = dataFabricacao;
+
+                Console.WriteLine("Equipamento editado com sucesso");
+            }
         }
+
+        private Equipamento ObterEquipamentoPorNumero(int numero)
+        {
+            foreach (Equipamento equipamento in equipamentos)
+            {
+                if (equipamento.numero == numero)
+                {
+                    return equipamento;
+                }
+            }
+            return null;
+        }
+
     }
+     public class Equipamento
+{
+    public int numero;
+    public string nome;
+    public double preco;
+    public string fabricante;
+    public DateTime dataFabricacao;
+
+    public Equipamento(int numero, string nome, double preco, string fabricante, DateTime dataFabricacao)
+    {
+        this.numero = numero;
+        this.nome = nome;
+        this.preco = preco;
+        this.fabricante = fabricante;
+        this.dataFabricacao = dataFabricacao;
+    }
+}
+     internal class Program
+{
+    static void Main(string[] args)
+    {
+        Funcionario junior = new Funcionario("Junior");
+        Equipamento pa = new Equipamento(001, "pá", 30.00, "Fabricante", DateTime.Now);
+    }
+}
 }
